@@ -24,16 +24,17 @@ const registerUser = asyncHandler(async (req,res) => {
 
     if (user) {
         res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            pic: user.pic,
-            token:generateToken(user._id),
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          isAdmin: user.isAdmin,
+          pic: user.pic,
+          token: generateToken(user._id),
         });
         
     } else {
         res.status(400);
-        throw new Error("failed to Create The User Fill All Details")
+        throw new Error("Failed to Create The User Fill All Details")
 }
 
 });
@@ -51,6 +52,9 @@ const authUser = asyncHandler(async (req, res) => {
         pic: user.pic,
         token: generateToken(user._id),
       });
+    } else {
+      res.status(400);
+      throw new Error("Invalid Credentials");
     }
 });
 

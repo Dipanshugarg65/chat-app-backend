@@ -1,8 +1,9 @@
 
 const express = require("express");
-const { chats } = require("./data/data");
 const cors = require("cors");
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const { chats } = require("./data/data");
 const connectDB = require("./config/db");
 const colors = require("colors");
 const userRoutes = require("./routes/userRoutes");
@@ -34,26 +35,26 @@ app.use("/api/message", messageRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
+/* MONGOOSE SETUP */
 const PORT = process.env.PORT || 3002;
 const server = app.listen(3002, console.log(`Server Started on PORT ${PORT}`.yellow.bold));
 
 
 // CONNECTION ESTABILISHED-----------
-const io = require('socket.io')(server, {
+const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "*",
+    origin: "*" || "http://localhost:3000",
   },
-})
+});
 
 
 io.on("connection", (socket) => {
-  console.log("connected to socket.io");
-
+console.log("Connected to Socket.io");
   // TO CONNECTED TO USER DATA AS THEY CAN JOIN OUR APPLICATION-----------
   socket.on("setup", (userData) => {
     socket.join(userData._id);
-    console.log("userData._id");
+    // console.log("userData._id");
     socket.emit("connected");
   });
 
